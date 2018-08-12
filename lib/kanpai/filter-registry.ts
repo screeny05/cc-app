@@ -5,8 +5,20 @@ interface KanpaiFilterMap {
 }
 
 export const FilterRegistry: KanpaiFilterMap = {
-    date: (value: string) => new Date(value),
-    number: (value: string) => Number.parseFloat(value)
+    date: (value: string) => {
+        const date = new Date(value);
+        if(Number.isNaN(date.getTime())){
+            return null;
+        }
+        return date;
+    },
+    number: (value: string) => {
+        const number = Number.parseFloat(value);
+        if(Number.isNaN(number)){
+            return null;
+        }
+        return number;
+    }
 }
 
 export const registerFilter = (name: string, filter: KanpaiFilterFunction): void => {

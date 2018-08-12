@@ -29,26 +29,6 @@ declare module 'react-native-sensitive-info' {
     export const deleteItem: (key: string, options: Partial<RNSensitiveInfoOptions>) => Promise<null>;
 }
 
-enum RiddenStatus {
-    ridden,
-    notRidden,
-    hidden,
-    notOperating
-}
-
-enum CountStatus {
-    none,
-    movedRidden,
-    filtered,
-    notRideable,
-    underConstruction
-}
-
-interface CoasterStatus {
-    countStatus: CountStatus;
-    riddenStatus: RiddenStatus;
-}
-
 interface UserData {
     userId: number,
     email: string;

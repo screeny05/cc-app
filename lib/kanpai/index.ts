@@ -20,19 +20,18 @@ export interface KanpaiCollection {
     [prop: string]: KanpaiExecutable;
 }
 
-export interface KanpaiOptions {
-    strict: boolean;
-}
-
 const attributeRegex = /^\[(.*)\]$/;
 
+const isKanpaiSelector = (argument: any): argument is KanpaiSelector => {
+    return typeof argument === 'string' || typeof argument === 'function';
+};
 
 /**
  * Assure argument is an Iterator
  * @param argument
  */
 const isKanpaiIterator = (argument: KanpaiExecutable): argument is KanpaiIterator => {
-    return Array.isArray(argument) && argument.length === 2 && typeof argument[0] === 'string' && typeof argument[1] === 'object';
+    return Array.isArray(argument) && argument.length === 2 && isKanpaiSelector(argument[0]) && typeof argument[1] === 'object';
 };
 
 /**
@@ -82,15 +81,15 @@ const executeSelector = (context: Context, selector: KanpaiSelector): Context =>
     return context.select(selector);
 };
 
-const executeElement = (context: Context, selection: KanpaiElement, options: KanpaiOptions): any => {
+const executeElement = (context: Context, selection: KanpaiElement): any => {
     if(!Array.isArray(selection)){
         selection = [selection, 'text'];
     }
     const [selector, property, filter = null] = selection;
 
     const element = executeSelector(context, selector);
-    if(options.strict && element.isEmpty()){
-        throw new Error(`Strict Error: Selector '${selector}' returned no elements`);
+    if(element.isEmpty()){
+        return null;
     }
 
     const value = getPropertyValue(element, property);
@@ -107,34 +106,29 @@ const executeElement = (context: Context, selection: KanpaiElement, options: Kan
     return value;
 };
 
-const executeIterator = (context: Context, mapper: KanpaiIterator, options: KanpaiOptions): any[] => {
+const executeIterator = (context: Context, mapper: KanpaiIterator): any[] => {
     const [selector, object] = mapper;
-    return executeSelector(context, selector).map(context => executeExecutable(context, object, options));
+    return executeSelector(context, selector).map(context => executeExecutable(context, object));
 };
 
-const executeCollection = (context: Context, object: KanpaiCollection, options: KanpaiOptions): any => {
-    return mapObject(object, (key: string, value: KanpaiExecutable) => [key, executeExecutable(context, value, options)]);
+const executeCollection = (context: Context, object: KanpaiCollection): any => {
+    return mapObject(object, (key: string, value: KanpaiExecutable) => [key, executeExecutable(context, value)]);
 };
 
-const executeExecutable = (context: Context, argument: KanpaiExecutable, options: KanpaiOptions): any => {
+const executeExecutable = (context: Context, argument: KanpaiExecutable): any => {
     if(isKanpaiIterator(argument)){
-        return executeIterator(context, argument, options);
+        return executeIterator(context, argument);
     }
     if(isKanpaiElement(argument)){
-        return executeElement(context, argument, options);
+        return executeElement(context, argument);
     }
     if(isKanpaiCollection(argument)){
-        return executeCollection(context, argument, options);
+        return executeCollection(context, argument);
     }
 
     throw new TypeError(`Given argument ${JSON.stringify(argument)} is not valid.`);
 }
 
-export function executeKanpai<T>(context: Context, config: KanpaiExecutable, options: Partial<KanpaiOptions> = {}): T {
-    const _options: KanpaiOptions = {
-        strict: true,
-        ...options
-    };
-
-    return executeExecutable(context, config, _options);
+export function executeKanpai<T>(context: Context, config: KanpaiExecutable): T {
+    return executeExecutable(context, config);
 };

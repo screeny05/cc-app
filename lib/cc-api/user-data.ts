@@ -9,7 +9,7 @@ const regexUserid: KanpaiFilterFunction = (val: string) => {
     return Number.parseFloat(match[1]);
 };
 
-export const getUserData = async function(): Promise<UserData> {
+export const getUserData = async function(sessionId: string): Promise<UserData> {
     return await getKanpai<UserData>('account/profile', {
         userId: ['#sub_menu_user a', '[href]', regexUserid],
         email: ['#email', '[value]'],
@@ -22,5 +22,5 @@ export const getUserData = async function(): Promise<UserData> {
         birthdayMonth: ['#month [selected]', '[value]', 'number'],
         birthdayDay: ['#day [selected]', '[value]', 'number'],
         residence: ['#residence', '[value]']
-    });
+    }, {}, sessionId);
 }
