@@ -12,7 +12,7 @@ export class LoginLoadingScreen extends React.Component<NavigationScreenProps> {
     }
 
     async bootstrap(){
-        const [email, password, autoLogin] = await multiGet(['credentials.email', 'credentials.password', 'credentials.autologin']);
+        const [email, password, autoLogin] = await multiGet(['credentials.email', 'credentials.password', 'credentials.autoLogin']);
 
         // if autoLogin or credentials are not set,
         // we do not login with saved credentials
@@ -24,7 +24,7 @@ export class LoginLoadingScreen extends React.Component<NavigationScreenProps> {
         // try to retrieve sessionid with given credentials
         try {
             const sessionId = await login(email, password);
-            this.props.navigation.navigate('App', { sessionId });
+            this.props.navigation.navigate('Catalog', { sessionId });
         } catch (e) {
             this.props.navigation.navigate('Login');
         }

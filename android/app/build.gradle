@@ -138,7 +138,7 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-secure-key-store')
+    compile project(':react-native-sensitive-info')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.facebook.react:react-native:+'

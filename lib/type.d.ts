@@ -22,6 +22,13 @@ declare module 'react-native-secure-key-store' {
     export const remove: (key: string) => Promise<void>;
 }
 
+declare module 'react-native-sensitive-info' {
+    export const setItem: (key: string, value: string, options: Partial<RNSensitiveInfoOptions>) => Promise<void>;
+    export const getItem: (key: string, options: Partial<RNSensitiveInfoOptions>) => Promise<string>;
+    export const getAllItems: (options: Partial<RNSensitiveInfoOptions>) => Promise<Object>;
+    export const deleteItem: (key: string, options: Partial<RNSensitiveInfoOptions>) => Promise<null>;
+}
+
 enum RiddenStatus {
     ridden,
     notRidden,

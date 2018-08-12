@@ -1,5 +1,5 @@
 rootProject.name = 'app'
-include ':react-native-secure-key-store'
-project(':react-native-secure-key-store').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-secure-key-store/android')
+include ':react-native-sensitive-info'
+project(':react-native-sensitive-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sensitive-info/android')
 
 include ':app'

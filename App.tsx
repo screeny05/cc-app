@@ -12,7 +12,7 @@ const AppStack = createBottomTabNavigator({
     Catalog: CatalogScreen,
     Settings: SettingsScreen
 }, {
-
+    initialRouteName: 'Catalog'
 });
 
 export const App = createSwitchNavigator({
